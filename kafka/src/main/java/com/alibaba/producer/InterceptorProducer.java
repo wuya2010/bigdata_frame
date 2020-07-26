@@ -1,7 +1,7 @@
 package com.alibaba.producer;
 
-import com.atguigu.kafka.interceptor.CountInterceptor;
-import com.atguigu.kafka.interceptor.TimeInterceptor;
+import com.alibaba.interceptor.CountInterceptor;
+import com.alibaba.interceptor.TimeInterceptor;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
