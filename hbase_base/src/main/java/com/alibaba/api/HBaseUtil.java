@@ -62,21 +62,19 @@ public class HBaseUtil {
 			System.out.println("table " + tableName + " already exists");
 			//直接return
 			admin.close();
-			
+
 			return;
 		}
 		
 		
 		//表的描述器中加入表名
 		HTableDescriptor tableDesc = new HTableDescriptor(TableName.valueOf(tableName));
-		
-		
+
 		//列族  ，有可能有多个，所以循环调用
 		for (String family : families) {
 			
 			//列的描述器
-			HColumnDescriptor familyDesc = new HColumnDescriptor(family); 
-			
+			HColumnDescriptor familyDesc = new HColumnDescriptor(family);
 			//在描述器中加入列名
 			tableDesc.addFamily(familyDesc);
 		}
@@ -109,7 +107,7 @@ public class HBaseUtil {
 		
 		//version == > 默认是1
 		familyDesc.setMaxVersions(3);
-		
+
 		//modifycolum： 修改列族   column指的列族         ===》modifyTable比较麻烦
 		admin.modifyColumn(TableName.valueOf(tableName), familyDesc);
 
@@ -136,7 +134,7 @@ public class HBaseUtil {
 		//这里也要分两步
 		admin.disableTable(TableName.valueOf(tableName));
 		admin.deleteTable(TableName.valueOf(tableName));
-		
+
 		admin.close();
 }
 	
@@ -202,7 +200,7 @@ public class HBaseUtil {
 		//一行可能有多个列
 		//获取列的信息==>数组
 		Cell[] cells = result.rawCells();
-		
+
 		//每一个cell都是k-v
 		for (Cell cell : cells) {
 			
@@ -232,20 +230,19 @@ public class HBaseUtil {
 		String stopRow) throws Exception {
 		
 		Table table = connection.getTable(TableName.valueOf(tableName));
-		
+
 		//===》Scan(byte [] startRow, byte [] stopRow)
 		Scan scan = new Scan(Bytes.toBytes(startRow), Bytes.toBytes(stopRow));
-		
-		
+
 		//===》ResultScanner(返回值) getScanner(final Scan scan) 
 		ResultScanner scanner = table.getScanner(scan);
-		
+
 		//遍历所有行数据
 		for (Result result : scanner) {
 		
 			//获取一列的信息==>导包
 			Cell[] cells = result.rawCells();
-			
+
 			//每一个cell都是k-v
 			for (Cell cell : cells) {
 				//提供了这个方法获取 工具类
@@ -288,6 +285,7 @@ public class HBaseUtil {
 		//写入过滤条件的字段==》列族 + 列名 + 比较
 		SingleColumnValueFilter filter = new SingleColumnValueFilter(Bytes.toBytes(family), Bytes.toBytes(column),
 				CompareFilter.CompareOp.EQUAL, Bytes.toBytes(value));
+
 		
 		//如果过滤没有哪个条件，比如name字段没有，那么就不显示==》这个要注意了
 		filter.setFilterIfMissing(true);
@@ -339,7 +337,8 @@ public class HBaseUtil {
      * @param value
      * @throws IOException
      */
-	
+
+	  //todo : 多个条件进行过滤
 	public static void getRowsByColumn2(String tableName, String family, String column, String value) throws Exception {
 		
 		Table table = connection.getTable(TableName.valueOf(tableName));
@@ -397,14 +396,12 @@ public class HBaseUtil {
     public static void deleteRow(String tableName, String rowKey) throws IOException {
     	
     	Table table = connection.getTable(TableName.valueOf(tableName));
-    	
+
     	//新建一个delete，放入rowkey
     	Delete delete = new Delete(Bytes.toBytes(rowKey));
-    	
 
-    	
     	table.delete(delete);
-      
+
         table.close();
     }
 
@@ -444,7 +441,7 @@ public class HBaseUtil {
 		
 		//createTable("person", "info");
 		//modifyTable("class","info");
-	   //putCell("person", "1002", "info", "name", "wangwu");
+	   //putCell("person", "1002", "info", "name", "wangwu");  //String tableName, String rowKey, String family, String column, String value
 	
 		//getRow("person",  "1001") ;
 		//getRowsByRowRange("person", "1001","1002");

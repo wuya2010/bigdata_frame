@@ -14,16 +14,18 @@ public class LogETLInterceptor implements Interceptor{
 
 	@Override
 	public void initialize() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
-	
+
 	//定义拦截器
 	@Override
 	public Event intercept(Event event) {
 		
 		byte[] body = event.getBody();
+
+
+		//fixme: 建立new String
 		String log = new String(body, Charset.forName("utf-8"));
 		
 		
@@ -58,7 +60,7 @@ public class LogETLInterceptor implements Interceptor{
 		
 		for (Event event : events) {
 			
-			//向下转型
+			//向下转型 todo： intercept
 			Event interceptor1 =intercept(event);
 			
 			if (interceptor1 != null) {

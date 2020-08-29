@@ -14,20 +14,21 @@ public class CustomInterceptor  implements Interceptor  {
 
     }
 
-    
+    // fixme: 对于 evnet 的判断
     @Override
     public Event intercept(Event event) {
     	
     	//==> public byte[] getBody();
+        //fixme : Returns the raw byte array of the data contained in this event
         byte[] body = event.getBody();
 
-        //先进行判断
+        //先进行判断 todo: body[0]  ????
         if (body[0] >= '1' && body[0] <= '9') {
         	
         	
         	// public void setHeaders(Map<String, String> headers);
         	// ==>public Map<String, String> getHeaders();
-        	
+        	//fixme:  Returns a map of name-value pairs describing the data stored in the body.
         	//头文件中put
             event.getHeaders().put("type", "number");
             
@@ -41,7 +42,7 @@ public class CustomInterceptor  implements Interceptor  {
     }
 
     
-    
+    //fixme: event 的集合
     @Override
     public List<Event> intercept(List<Event> events) {
 

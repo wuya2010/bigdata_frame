@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-
+//todo: need think again
 //继承一个abstratsink   实现一个接口
 public class CustomSink extends AbstractSink implements Configurable{
 
@@ -19,10 +19,13 @@ public class CustomSink extends AbstractSink implements Configurable{
 	private String prefix = null;
 	
 	//组个往集合中放
+	//fixme: 新建 ArrayList
  	private List<Event> events  = new ArrayList<>();
  	//获取名字
  	//导包：  slf 4j 下的包
  	//给每一个对象 起一个名字 （传入一个类名）            ，方法s生成一个自己的log对象
+
+	// todo: ---import org.slf4j.Logger;
  	private static Logger LOG = LoggerFactory.getLogger(CustomSink.class);
  	
 	

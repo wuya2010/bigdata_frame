@@ -19,7 +19,7 @@ public class HdfsDemo {
 	Configuration conf  = null  ;
 	FileSystem fs = null ;
 	String uri = "hdfs://hadoop102:9000";
-	String user = "atguigu";
+	String user = "etlbat";
 	
 	/**
 	 * 定位读取文件  128M ~ --------------seek
@@ -178,7 +178,7 @@ public class HdfsDemo {
 	@Test
 	public void testListFiles() throws Exception{
 		RemoteIterator<LocatedFileStatus> remoteIterator = fs.listFiles(new Path("/"), true);
-		
+
 		while(remoteIterator.hasNext()) {
 			//获取下一个
 			LocatedFileStatus fileStatus = remoteIterator.next();
@@ -187,7 +187,7 @@ public class HdfsDemo {
 			//hdfs://hadoop102:9000/user/atguigu/liubei.txt
 			System.out.println(fileStatus.getReplication());
 			System.out.println(fileStatus.getPermission());
-			System.out.println(fileStatus.getBlockSize());
+			System.out.println(fileStatus.getBlockSize());//getBolockSize getBlockSize
 			System.out.println(fileStatus.getLen());
 			BlockLocation[] blockLocations = fileStatus.getBlockLocations();
 			
@@ -238,16 +238,16 @@ public class HdfsDemo {
 		//fs.copyToLocalFile(false,new Path("/NOTICE.txt"),new Path("d:/hadoopsrc/NOTICE.txt"), true);
 	}
 	
-	@Before
-	public void before() throws Exception {
-		conf = new Configuration();
-		fs  = FileSystem.get(new URI(uri), conf,user);
-	}
+//	@Before
+//	public void before() throws Exception {
+//		conf = new Configuration();
+//		fs  = FileSystem.get(new URI(uri), conf,user);
+//	}
 	
-	@After
-	public void after()  throws Exception{
-		fs.close();
-	}
+//	@After
+//	public void after()  throws Exception{
+//		fs.close();
+//	}
 	
 	
 	
@@ -261,7 +261,7 @@ public class HdfsDemo {
 		conf.set("dfs.replication", "2");
 		
 		FileSystem fs  = FileSystem.get(new URI("hdfs://hadoop102:9000"), conf, "atguigu");
-		//2. 操作
+		//2. 操作  (Path src  本地 , Path dst  --to hdfs)
 		fs.copyFromLocalFile(new Path("d:/hadoopsrc/longlong.txt"), new Path("/0508/dashenban"));
 		//3. 关闭资源
 		fs.close();
@@ -274,11 +274,13 @@ public class HdfsDemo {
 	public void testClientConnectHDFS() throws Exception {
 		//Configuration
 		Configuration conf  = new Configuration();
-		//FileSystem
-		FileSystem fs  = FileSystem.get(new URI("hdfs://hadoop102:9000"), conf, "atguigu");
+
+
+		//fixme: -- FileSystem: 获取对应的system
+		FileSystem fs  = FileSystem.get(new URI("hdfs://hadoop105:9000"), conf, "etlbat");
 		
 		//在HDFS上创建一个目录  /0508/dashenban
-		fs.mkdirs(new Path("/0508/dashenban"));
+		fs.mkdirs(new Path("/test_hdfs"));
 		
 		//关闭资源
 		fs.close();
