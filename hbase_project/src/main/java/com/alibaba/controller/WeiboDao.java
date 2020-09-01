@@ -32,7 +32,7 @@ public class WeiboDao {
 		try {
 			Configuration conf = HBaseConfiguration.create();
 			
-			conf.set("hbase.zookeeper.quorum", "hadoop102,hadoop103,hadoop103");
+			conf.set("hbase.zookeeper.quorum", "hadoop105,hadoop106,hadoop107");
 			
 			connection = ConnectionFactory.createConnection(conf);
 		}catch (Exception e) {
@@ -44,7 +44,7 @@ public class WeiboDao {
 	/*
 	 * 创建namespace
 	 * 
-	 * 
+	 *  create Admin
 	 */
 	public void createNamespace(String namespaceWeibo) throws Exception {
 		
@@ -72,9 +72,11 @@ public class WeiboDao {
 	
 	/*
 	 * 创建表方法
-	 * 
+	 * 	tablename , version, families
+	 * 	create HtableDescriptor + create HColumnDescriptor
 	 */
 	public void createTable(String tableName,Integer versions,String... families) throws Exception {
+
 
 		Admin admin = connection.getAdmin();
 		
@@ -82,15 +84,16 @@ public class WeiboDao {
 		if (admin.tableExists(TableName.valueOf(tableName))) {
 			System.out.println("this table is already exit");
 		}
-		
+
 		HTableDescriptor tableDesc = new HTableDescriptor(TableName.valueOf(tableName));
 		
-		for (String family : families) {
+		for (String family : families) {  //toto: 列族
 			
 			HColumnDescriptor familydesc = new HColumnDescriptor(family);
 			
 			familydesc.setMaxVersions(versions);
-			tableDesc.addFamily(familydesc);
+			tableDesc.addFamily(familydesc); //  Adds a column family.·
+
 			
 		}
 		
@@ -123,19 +126,21 @@ public class WeiboDao {
 	/*
 	 * 
 	 * 通过前缀获取内容
-	 * 
+	 *
+	 * create Scan : Used to perform Scan operations.
+	 * create ResultScanner
 	 */
 	public List<String> getRowKeysByPrefix(String tableName, String prefix) throws Exception {
 		
 		List<String> rowkeys = new ArrayList<>();
-		
+
 		Table table = connection.getTable(TableName.valueOf(tableName));
 		
 		Scan scan = new Scan();
 		
-		scan.setRowPrefixFilter(Bytes.toBytes(prefix));
+		scan.setRowPrefixFilter(Bytes.toBytes(prefix)); // 设置前缀
 		
-		ResultScanner scanner = table.getScanner(scan);
+		ResultScanner scanner = table.getScanner(scan);  //  Returns a scanner on the current table
 		
 		for (Result result : scanner) {
 			
@@ -157,6 +162,8 @@ public class WeiboDao {
 	
 	/*
 	 * 插入一行数据
+	 *
+	 * create put
 	 */
 	public void putCell(String tableName, String family,
 			String Rowkey, String column, String value) throws Exception {
@@ -165,7 +172,7 @@ public class WeiboDao {
 		
 		Put put = new Put(Bytes.toBytes(Rowkey));
 		put.addColumn(Bytes.toBytes(family), Bytes.toBytes(column), Bytes.toBytes(value));
-		
+
 		table.put(put);
 		
 		table.close();
@@ -173,11 +180,15 @@ public class WeiboDao {
 	}
 	
 	
-	
+	/*
+		插入多行数据
+
+		new put
+	 */
 	public void putcells(String tableName, List<String> rowkeys, String family, String column,
 			String value) throws Exception {
-		// TODO Auto-generated method stub
-		
+
+		//todo: 如果rowkyes = 0
 		if (rowkeys.size() ==0) {
 			return;
 		}
@@ -185,7 +196,8 @@ public class WeiboDao {
 		Table table = connection.getTable(TableName.valueOf(tableName));
 		
 		List<Put> puts = new ArrayList<>();
-		
+
+		//todo: 插入多行数据
 		for (String rowkey : rowkeys) {
 			
 			Put put = new Put(Bytes.toBytes(rowkey));
@@ -204,7 +216,7 @@ public class WeiboDao {
 	
 	/*
 	 * 获取row范围的数据
-	 * 
+	 * create scan  --> getScanner
 	 */
 	public List<String> getRowKeysByRangs(String tableName, String startRow, String stopRow) throws IOException {
 
@@ -215,10 +227,11 @@ public class WeiboDao {
 		Scan scan = new Scan(Bytes.toBytes(startRow),Bytes.toBytes(stopRow));
 		
 		ResultScanner scanner = table.getScanner(scan);
-		
+
+		//todo: 遍历结果集
 		for (Result result : scanner) {
 			
-			
+
 			//getRow()方法获得的什么
 			byte[] row = result.getRow();
 			
@@ -248,7 +261,7 @@ public class WeiboDao {
 		
 		Result result = table.get(get);
 		
-		Cell[] cells = result.rawCells();
+		Cell[] cells = result.rawCells(); // todo: Return the array of Cells backing this Result instance.
 		
 		for (Cell cell : cells) {
 			
@@ -286,7 +299,7 @@ public class WeiboDao {
 			
 			Cell[] cells = result.rawCells();
 
-			//????
+			//
 			list.add(Bytes.toString(CellUtil.cloneValue(cells[0])));
 			
 		}

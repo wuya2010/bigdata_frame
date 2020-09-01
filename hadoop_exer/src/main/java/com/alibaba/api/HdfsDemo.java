@@ -18,7 +18,7 @@ import java.util.Arrays;
 public class HdfsDemo {
 	Configuration conf  = null  ;
 	FileSystem fs = null ;
-	String uri = "hdfs://hadoop102:9000";
+	String uri = "hdfs://hadoop105:9000";
 	String user = "etlbat";
 	
 	/**
@@ -32,7 +32,7 @@ public class HdfsDemo {
 		//输出流
 		FileOutputStream fos = new FileOutputStream(new File("d:/hadoopsrc/hadoop-2.7.2.tar.gz.part2"));
 		
-		//定位到要读取的位置
+		//定位到要读取的位置  todo: seek 定位读取
 		fis.seek(1024 * 1024 * 128 );
 		
 		//流的对拷
@@ -76,7 +76,7 @@ public class HdfsDemo {
 	 */
 	@Test
 	public void testDownloadFileOnIO() throws Exception {
-		//1. 输入流
+		//1. 输入流  todo： 写出 fs.open
 		FSDataInputStream fis = fs.open(new Path("/0508/dashenban/banzhang.txt"));
 		
 		//2. 输出流
@@ -100,10 +100,10 @@ public class HdfsDemo {
 		//1. 输入流  读取本地的文件
 		FileInputStream fis = new FileInputStream(new File("d:/hadoop/ni.txt"));
 		
-		//2. 输出流 将数据写入到HDFS
+		//2. 输出流 将数据写入到HDFS todo： 数据写入 fs.create
 		FSDataOutputStream fos = fs.create(new Path("/0508/dashenban/xiaoguoguo.txt"));
-		
-		//3. 流的对拷
+
+        //3. todo : 流的对拷  copyBytes
 		IOUtils.copyBytes(fis, fos, conf);
 		
 		
@@ -146,15 +146,16 @@ public class HdfsDemo {
 		
 		for (FileStatus fileStatus : listStatus) {
 			//判断是文件还是目录
-			if(fileStatus.isFile()) {
+			if(fileStatus.isFile()) {  //todo: 文件或是目录
 				System.out.println("File:" + path + "/" + fileStatus.getPath().getName());
 			}else {
 				// path:   hdfs://hadoo1p102:9000/0508
 				System.out.println(fileStatus.getPath());
 				
 				System.out.println("---------------------------------");
+				//fixme: substring 截取
 				String currentPath = fileStatus.getPath().toString().substring("hdfs://hadoop102:9000".length());
-				
+
 				//打印当前的目录
 				System.out.println("Dir:" + currentPath);
 				
@@ -202,6 +203,7 @@ public class HdfsDemo {
 				//0,15429,hadoop102,hadoop103
 				System.out.println("》》》》》》》》》》》》》》》》》》");
 				String[] hosts = blockLocation.getHosts();
+
 				System.out.println(Arrays.toString(hosts));
 			}
 			
@@ -237,13 +239,17 @@ public class HdfsDemo {
 		fs.copyToLocalFile(new Path("/NOTICE.txt"),new Path("d:/hadoopsrc/NOTICE.txt"));
 		//fs.copyToLocalFile(false,new Path("/NOTICE.txt"),new Path("d:/hadoopsrc/NOTICE.txt"), true);
 	}
-	
-//	@Before
-//	public void before() throws Exception {
-//		conf = new Configuration();
-//		fs  = FileSystem.get(new URI(uri), conf,user);
-//	}
-	
+
+
+	//todo: test before
+	@Before
+	public void before() throws Exception {
+		conf = new Configuration();
+		fs  = FileSystem.get(new URI(uri), conf,user);
+	}
+
+
+    //todo: test after
 //	@After
 //	public void after()  throws Exception{
 //		fs.close();

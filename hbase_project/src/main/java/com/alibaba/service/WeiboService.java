@@ -29,19 +29,21 @@ public class WeiboService {
 	/*
 	 * 初始化，分别根据关系建立三个表
 	 * 
-	 * 
+	 *
+	 *
+	 *
 	 */
 	public void init() throws Exception {
 		
 		
 		
-		//首先建一个namespace	
+		//首先建一个: namespace
 		dao.createNamespace(Names.NAMESPACE_WEIBO);
-		//创建微博表
+		//创建微博表 : table, family
 		dao.createTable(Names.TABLENAME_WEIBO,Names.WEIBO_FAMILY_DATA);
-		//3) 创建用户关系表
+		//3) 创建用户关系表: table, family
 		dao.createTable(Names.TABLENAME_RELATION,Names.RELATION_FAMILY_DATA);
-	     //4) 创建用户微博内容接收邮件表
+	     //4) 创建用户微博内容接收邮件表:  table, version, family
 		dao.createTable(Names.TABLENAME_INDEX,Names.INDEX_VERSIONS,Names.INDEX_FAMILY_DATA);
 		
 	}
@@ -54,10 +56,10 @@ public class WeiboService {
 	public void publish(String star, String context) throws Exception {
 
 		//1. 放入数据star
-		String Rowkey = star +"_"+System.currentTimeMillis();
+		String Rowkey = star +"_"+System.currentTimeMillis();  //rowkey: star_currentTime
 		
 		dao.putCell(Names.TABLENAME_WEIBO,Names.WEIBO_FAMILY_DATA,Rowkey, 
-				Names.WEIBO_COLUMN,context);
+				Names.WEIBO_COLUMN,context); // table, family, rowkey , column, value
 		
 		
 		
@@ -66,9 +68,9 @@ public class WeiboService {
 		//后面的逻辑不能掉了==>与其他两个表的关联
 		//2. 在relation表      中查找star的所有fansID
 		
-		String prifix = star + ":Follow:";
+		String prifix = star + ":Follow:"; // 前缀： stat:Follow
 		//通过前缀进行查找
-		List<String> list = dao.getRowKeysByPrefix(Names.TABLENAME_RELATION,prifix);
+		List<String> list = dao.getRowKeysByPrefix(Names.TABLENAME_RELATION,prifix); //返回值： List<String>
 		
 		//对list进行判断
 		if(list.size()<=0) return ;

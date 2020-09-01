@@ -10,6 +10,30 @@ import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
+
+/*
+以下是博客的好友列表数据，冒号前是一个用户，冒号后是该用户的所有好友？
+求出哪些人两两之间有共同好友，及他俩的共同好友都有谁？
+输入文件：
+A:B,C,D,F,E,O
+B:A,C,E,K
+C:F,A,D,I
+D:A,E,F,L
+E:B,C,D,M,L
+F:A,B,C,D,E,O,M
+G:A,C,D,E,F
+H:A,C,D,E,O
+I:A,O
+J:B,O
+K:A,C,D
+L:D,E,F
+M:E,F,G
+O:A,H,I,J
+
+思路：
+1. 读取数据， maptask 将数据转换成 key-> value；获取关注A的人；
+2. 同时包含了 A + B 的 则为公共的好友
+ */
 public class PublicFriendsMapper extends Mapper<LongWritable, Text, Text, NullWritable>{
 	
 	TreeMap<String,String> map = new TreeMap<>();
@@ -44,7 +68,7 @@ public class PublicFriendsMapper extends Mapper<LongWritable, Text, Text, NullWr
 
 		// 从A开始进行循环
 		for (int i = 0; i < array.length; i++) {
-			String outerValues = map.get(array[i]);//获取A的value，方便后面进行比较
+			String outerValues = map.get(array[i]);//获取A的value，方便后面进行比较  todo:value
 			
 			// 从A下面一个key，即B开始循环
 			for (int j = i + 1; j < array.length; j++) {

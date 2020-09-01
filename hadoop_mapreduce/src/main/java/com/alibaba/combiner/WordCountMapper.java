@@ -1,4 +1,4 @@
-package com.alibaba.wordcount.combiner;
+package com.alibaba.combiner;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;

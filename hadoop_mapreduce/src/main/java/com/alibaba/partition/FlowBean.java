@@ -1,4 +1,4 @@
-package com.alibaba.flowcount.partition;
+package com.alibaba.partition;
 
 import org.apache.hadoop.io.Writable;
 

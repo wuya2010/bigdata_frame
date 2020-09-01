@@ -1,4 +1,4 @@
-package com.alibaba.flowcount.sort;
+package com.alibaba.sort;
 
 import org.apache.hadoop.io.WritableComparable;
 

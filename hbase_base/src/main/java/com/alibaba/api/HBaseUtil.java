@@ -32,7 +32,7 @@ public class HBaseUtil {
 			 //工具类： HBaseconfiguration
 			 Configuration conf = HBaseConfiguration.create();
 			 //这里只放一个zookeeper的连接，就可以获取其他的连接
-		     conf.set("hbase.zookeeper.quorum", "hadoop102,hadoop103,hadoop104");
+		     conf.set("hbase.zookeeper.quorum", "hadoop105,hadoop106,hadoop107");
 	         conf.set("hbase.zookeeper.property.clientPort", "2181");
 			 connection = ConnectionFactory.createConnection(conf);
 		} catch (IOException e) {
