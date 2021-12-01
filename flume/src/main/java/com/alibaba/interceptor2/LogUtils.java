@@ -39,7 +39,7 @@ public class LogUtils {
 		String[] logContents  = log.split("\\|");	
 		
 		//验证长度
-		if (logContents.length!=2) {
+		if (logContents.length!=3) {
 			return false;
 		}
 		

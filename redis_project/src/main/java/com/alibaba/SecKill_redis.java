@@ -117,7 +117,7 @@ public class SecKill_redis {
 		
 		// 准备key
 		String productKey="sk:"+prodid+":product";
-		String userKey="sk:"+prodid+":user";
+		String userKey="sk:"+prodid+":usr";
 		
 		//获取Jedis实例
 		JedisPool jedisPool = JedisPoolUtil.getJedisPoolInstance();
@@ -167,6 +167,7 @@ public class SecKill_redis {
 		//------------------秒杀流程---------------------
 		
 		//开启事务
+		// 加锁并开启事务： 	===》 jedis.watch(productKey);
 		Transaction transaction = jedis.multi();
 		
 		// 将当前用户加入到成功秒杀名单中
@@ -177,7 +178,8 @@ public class SecKill_redis {
 		
 		// 执行
 		List<Object> result = transaction.exec();
-		
+
+		// 数量太少不进行秒杀
 		if (result==null || result.size() <2) {
 			
 			System.out.println(uid+"秒杀失败！");

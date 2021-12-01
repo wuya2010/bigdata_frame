@@ -17,8 +17,7 @@ public class CustomSink extends AbstractSink implements Configurable{
 	//在前面声明
 	private Integer batchSize =null;
 	private String prefix = null;
-	
-	//组个往集合中放
+
 	//fixme: 新建 ArrayList
  	private List<Event> events  = new ArrayList<>();
  	//获取名字

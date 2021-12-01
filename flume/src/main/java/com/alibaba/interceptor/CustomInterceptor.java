@@ -51,10 +51,8 @@ public class CustomInterceptor  implements Interceptor  {
         for (Event event : events) {
             intercept(event);
         }
-        
-        //这里理解一些？
-        return events;
 
+        return events;
     }
 
     

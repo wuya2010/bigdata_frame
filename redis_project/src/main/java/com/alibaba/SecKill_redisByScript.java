@@ -36,7 +36,7 @@ public class SecKill_redisByScript {
 
 		 	 	JedisPool jedispool =  JedisPoolUtil.getJedisPoolInstance();
 		
-		 	 	Jedis jedis=jedispool.getResource();
+		 	 	Jedis jedis= jedispool.getResource();
 		 	 	
 		 		 //String sha1=  .secKillScript;
 		 	 	

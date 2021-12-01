@@ -48,17 +48,21 @@ public class WeiboService {
 		
 	}
 
-	
-	
-	
+
+	/**
+	 *  1001:Follow:1005              column=data:time, timestamp=1598784420649, value=1598784205117
+	 *  1002:BeFollowedBY:1001        column=data:time, timestamp=1598784135950, value=1598784135949
+	 *
+	 */
+
 	//1. 发微博 
 	//需要新建表，并传入数据==>2个参数： rowkey   ， value
 	public void publish(String star, String context) throws Exception {
 
 		//1. 放入数据star
-		String Rowkey = star +"_"+System.currentTimeMillis();  //rowkey: star_currentTime
+		String Rowkey = star +"_"+System.currentTimeMillis();  //微博rowkey: star_currentTime
 		
-		dao.putCell(Names.TABLENAME_WEIBO,Names.WEIBO_FAMILY_DATA,Rowkey, 
+		dao.putCell(Names.TABLENAME_WEIBO,Names.WEIBO_FAMILY_DATA,Rowkey,
 				Names.WEIBO_COLUMN,context); // table, family, rowkey , column, value
 		
 		
@@ -69,7 +73,7 @@ public class WeiboService {
 		//2. 在relation表      中查找star的所有fansID
 		
 		String prifix = star + ":Follow:"; // 前缀： stat:Follow
-		//通过前缀进行查找
+		//通过前缀进行查找,获取所有得数据
 		List<String> list = dao.getRowKeysByPrefix(Names.TABLENAME_RELATION,prifix); //返回值： List<String>
 		
 		//对list进行判断
@@ -88,6 +92,7 @@ public class WeiboService {
 		//3. 将weiboID插入到所有fans的inbox中==>在index表中，rowkey ： fandids
 		//表中结构：  key: fansids, value:  Rowkey   ===》让所有fans查看star最新跟新的消息，给的是id而不是直接的数据
 		//将weibo表中的rowkey传给value
+		// 关系表rowkey: xxx:follow:xxx  ==> 相同的值
  		dao.putcells(Names.TABLENAME_INDEX,fansIds,Names.INDEX_FAMILY_DATA,star,Rowkey);
 	}
 	
@@ -101,7 +106,7 @@ public class WeiboService {
 	public void follow(String star, String fans) throws Exception {
 		
 		//1. 在relation表中添加关系
-		String Rowkey1 = star + ":Follow:" +fans;
+		String Rowkey1 = star + ":Follow:" + fans;
 		String Rowkey2 = fans + ":BeFollowedBY:" + star;
 		
 		dao.putCell(Names.TABLENAME_RELATION, Names.INDEX_FAMILY_DATA, 
@@ -120,9 +125,10 @@ public class WeiboService {
 		List<String> list = dao.getRowKeysByRangs(Names.TABLENAME_WEIBO,startRow,stopRow);
 
 		//2.2 再取最后的三条==》获取三条信息
-		//2.2.1 判断
+		//2.2.1 fixme： ---------------------------
 		if (list.size()<=0) return;
-		
+
+		// 这里是什么
 		int fromIndex = list.size()>=3?(list.size()-Names.INDEX_VERSIONS):0;
 		//将结果放在list中, 得到最后的三行(==》star+ 时间戳)
 		List<String> recentWeiboIds = list.subList(fromIndex, list.size());
@@ -139,12 +145,14 @@ public class WeiboService {
 	
 
 	//3. 取关
-	//删除表中的数据
+	//删除表中的数据  ==》 取消关注与 粉丝表的相关数据
 	public void unfollow(String star, String fans) throws Exception {
 		
 		String Rowkey1 = star + ":Follow:" +fans;
 		String Rowkey2 = fans + ":BeFollowedBY:" + star;
-		
+
+		// 2 个表中删除：
+
 		//删除整行
 		dao.deleteRow(Names.TABLENAME_RELATION,Rowkey1);
 		dao.deleteRow(Names.TABLENAME_RELATION,Rowkey2);
@@ -163,11 +171,12 @@ public class WeiboService {
 
 
 
-	//获取近期微博的数量
+	//获取近期微博的数量 ==》 获取某个粉丝的所有关注人信息
 	public List<String> getAllRecentWeibos(String fans) throws Exception {
 		
 		 //1.从inbox表中获取fans的所有star的近期weiboId==>value的值
 		List<String> list = dao.getRow(Names.TABLENAME_INDEX,fans);
+
 		if (list.size()<=0) {
 			return new ArrayList<>();
 		}

@@ -3,6 +3,8 @@ package com.alibaba;
 import org.junit.Test;
 import redis.clients.jedis.Jedis;
 
+import java.io.IOException;
+
 public class InitDataTest {
 	
 	// http://192.168.3.165:8080/MySeckill/index.jsp
@@ -13,7 +15,7 @@ public class InitDataTest {
 	@Test
 	public void test() {
 		
-		Jedis jedis =new Jedis("192.168.6.5",6379);
+		Jedis jedis =new Jedis("192.168.25.128",6379);
 		
 		System.out.println(jedis.ping());
 		
@@ -34,7 +36,7 @@ public class InitDataTest {
 	@Test
 	public void test1() {
 		
-		Jedis jedis =new Jedis("192.168.162.128",6379);
+		Jedis jedis =new Jedis("192.168.25.128",6379);
 		
 		System.out.println(jedis.ping());
 		
@@ -42,17 +44,27 @@ public class InitDataTest {
 		String usersKey="sk:"+1001+":usr";
 		
 		jedis.set(qtkey, "300");
-		
-		jedis.del(usersKey);
+		jedis.set(usersKey, "500");
+
+//		jedis.del(usersKey);
 		
 		String string = jedis.get(qtkey);
-		
-		
+
 		System.out.println(string);
 		
 		jedis.close();
 	}
-	
+
+	@Test
+	public void getTest(){
+		try {
+
+			SecKill_redis.doSecKill("1002","1002");
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 
 }

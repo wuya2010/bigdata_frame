@@ -144,7 +144,7 @@ public class WeiboDao {
 		
 		for (Result result : scanner) {
 			
-			//===》获取
+			//===》获取 rowkey
 			byte[] row = result.getRow();
 			//创建一个集合放进去
 			//Bytes.toString也是转换

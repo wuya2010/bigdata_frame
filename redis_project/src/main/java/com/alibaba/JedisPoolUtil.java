@@ -25,7 +25,7 @@ public class JedisPoolUtil {
 					//在获取连接的时候检查有效性, 默认false
 					poolConfig.setTestOnBorrow(true);
 				 
-					jedisPool = new JedisPool(poolConfig, "192.168.6.5", 6379, 100000 );
+					jedisPool = new JedisPool(poolConfig, "192.168.25.128", 6379, 100000 );
 			 
 				}
 			}

@@ -62,7 +62,6 @@ public class PublicFriendsMapper extends Mapper<LongWritable, Text, Text, NullWr
 		
 		// 获取map中所有的key
 		Set<String> keySet = map.keySet();
-
 		// 将key放进数组中，方便遍历
 		String[] array =  keySet.toArray(new String[keySet.size()]);
 

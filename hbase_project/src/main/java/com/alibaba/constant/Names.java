@@ -8,9 +8,9 @@ public class Names {
 	public static final  String NAMESPACE_WEIBO = "weibo";
 	
 	//需要建立的表
-	public static final String TABLENAME_WEIBO = "weibo:weibo";
+	public static final String TABLENAME_WEIBO = "weibo:weibo"; // 明星表
 	public static final String TABLENAME_RELATION = "weibo:relation";
-	public static final String TABLENAME_INDEX = "weibo:index";
+	public static final String TABLENAME_INDEX = "weibo:index"; //粉丝表
 	
 	
 	//表中的常量==》列族
