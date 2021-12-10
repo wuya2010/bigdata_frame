@@ -17,10 +17,10 @@ public class CustomerOffsetConsumer2 {
 		
 		
 	    Properties props = new Properties();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "hadoop102:9092,hadoop103:9092");
+		props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "node03:9092,node04:9092,node05:9092");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "bigdata-0508");
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "test08");
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
@@ -30,7 +30,7 @@ public class CustomerOffsetConsumer2 {
 		
         //测试环节
         // 接口：  ConsumerRebalanceListener   需要实现2个方法
-		consumer.subscribe(Arrays.asList("first"), new ConsumerRebalanceListener() {
+		consumer.subscribe(Arrays.asList("media_test2"), new ConsumerRebalanceListener() {
 			
 			
 			//回收所有分区   消费者所有分区的集合： Collection

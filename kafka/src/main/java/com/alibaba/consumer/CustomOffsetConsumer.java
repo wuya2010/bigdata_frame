@@ -1,3 +1,4 @@
+
 package com.alibaba.consumer;
 
 import org.apache.kafka.clients.consumer.*;
@@ -16,17 +17,17 @@ public class CustomOffsetConsumer {
     public static void main(String[] args) {
 
         Properties props = new Properties();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "hadoop102:9092,hadoop103:9092");
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "node03:9092,node04:9092,node05:9092");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "bigdata-0508");
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "test06");
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
 
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(props);
+        final KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(props);
 
-        consumer.subscribe(Arrays.asList("first"), new ConsumerRebalanceListener() {
+        consumer.subscribe(Arrays.asList("media_test2"), new ConsumerRebalanceListener() {
             @Override
             public void onPartitionsRevoked(Collection<TopicPartition> partitions) {
 
@@ -37,6 +38,7 @@ public class CustomOffsetConsumer {
                 currentOffsets.clear();
                 for (TopicPartition partition : partitions) {
                     Long offset = getOffsetByTopicPartition(partition);
+                    System.out.println("get offset "  + offset);
                     consumer.seek(partition, offset);
                 }
             }
@@ -60,10 +62,19 @@ public class CustomOffsetConsumer {
     }
 
     private static void commitOffset(HashMap<TopicPartition, Long> currentOffsets) {
+        System.out.println(currentOffsets);
 
+        /**
+         * {media_test2-0=270, media_test2-1=241, media_test2-2=308}
+         * {media_test2-0=270, media_test2-1=241, media_test2-2=308}
+         * {media_test2-0=270, media_test2-1=241, media_test2-2=308}
+         * {media_test2-0=270, media_test2-1=241, media_test2-2=308}
+         * {media_test2-0=270, media_test2-1=241, media_test2-2=308}
+         */
     }
 
     private static Long getOffsetByTopicPartition(TopicPartition partition) {
         return null;
     }
 }
+

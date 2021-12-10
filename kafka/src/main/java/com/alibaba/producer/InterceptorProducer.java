@@ -15,7 +15,7 @@ public class InterceptorProducer {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
 
         Properties props = new Properties();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "hadoop102:9092,hadoop103:9092");
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "node03:9092,node04:9092,node05:9092");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 
@@ -23,14 +23,15 @@ public class InterceptorProducer {
         props.put(ProducerConfig.RETRIES_CONFIG, 1);
         props.put(ProducerConfig.LINGER_MS_CONFIG, 1);
 
+        // 可以很快执行
         props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, TimeInterceptor.class.getName() + "," + CountInterceptor.class.getName());
 
         //1.创建KafkaProducer对象
         KafkaProducer<String, String> producer = new KafkaProducer<String, String>(props);
 
         //2.调用send方法
-        for (int i = 0; i < 1000; i++) {
-            ProducerRecord<String, String> record = new ProducerRecord<>("first", "message-" + i);
+        for (int i = 0; i < 10; i++) {
+            ProducerRecord<String, String> record = new ProducerRecord<>("media_test2", "message-" + i);
             RecordMetadata metadata = producer.send(record).get();
             if (metadata != null) {
                 System.out.println("success:" + metadata.topic() + "-" + metadata.partition() + "-" + metadata.offset());

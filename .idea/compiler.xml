@@ -9,12 +9,12 @@
         <module name="mock_data" />
         <module name="hbase_base" />
         <module name="kafka" />
+        <module name="redis_project" />
         <module name="hadoop_exer" />
-        <module name="flume" />
         <module name="hive_udf" />
         <module name="hadoop_mapreduce" />
         <module name="zookeeper" />
-        <module name="redis_project" />
+        <module name="flume" />
         <module name="hbase_project" />
       </profile>
     </annotationProcessing>
